@@ -6,41 +6,70 @@ if (!isset($_GET['p'])) {
 }
 
 $url = $_GET['p'];
-// $url = substr($url, 1);
 
+// correct urls
 $urls = [
-   "/" => 'home',
-   "/feed" => 'home',
-   "/profile" => 'user/profile',
-   "/logout" => 'logout',
-   '/profile/settings' => 'user/settings'
+   ['/', '/feed', '/u', '/logout'], # <- avaible urls
+   '/' => ['/', []],
+   '/feed' => ['/feed', []],
+   '/u' => ['/u', ['/home', '/notes', '/friends', '/followers']],
+   '/logout' => ['/logout', []]
 ];
 
-// echo $url;
-//
-// if (!in_array($url, $urls)) {
-//    echo '404. Page not found.';
-//    exit();
-// }
+// which url
+$router = [
+   "/" => 'home',
+   "/feed" => 'home',
+   "/logout" => 'logout',
+   '/u' => 'user/profile'
+];
+
+echo 'url: ' . $url . '<br>';
+print_r($urls[$url]); echo '<br>';
+
+if ($url != "/") {
+   $params = explode('/', $url);
+   echo 'params: '; print_r($params);
+   $params[1] = '/'.$params[1];
+} else {
+   $params = [0, '/'];
+}
+
+if (!in_array($params[1], $urls[0])) {
+   echo '<h1>404</h1>';
+   exit();
+}
+
+if ($params[1] == '/u') { # profile router
+   if (count($params) < 3) {
+      echo '<h1>User Id is required!</h1>';
+      exit();
+   }
+   $userid = $params[2];
+   $view = ($params[3] ? $params[3] : "home");
+
+   echo '<div id="body-container">';
+      echo '<h1>User Profile ('.$userid.')</h1>';
+      echo '<h3>'.$view.'</h3>';
+      foreach ($urls[$params[1]][1] as $v) {
+         echo '<a href="#" data-link="/u/'.$userid.'/' . substr($v, 1) . '">' . substr($v, 1) . '</a> ';
+      }
+   echo '</div>';
+
+} else {
+   echo '<div id="body-container">';
+      require '../views/' . $router[$url] . '.php';
+   echo '</div>';
+}
 
 if (isset($_GET['specials'])) { # configure specials such as load nav or sidebar etc.
    $specials = $_GET['specials'];
    $specials = explode(',', $specials);
-   print_r($specials);
+   // print_r($specials);
    if (in_array("loadNav", $specials)) {
       require '../modules/essentials/nav.php';
    }
    if (in_array("loadsidebar", $specials)) {
       echo 'sidebar here!';
    }
-} else { # if we're not loading any specials
-   // echo $url . '<br>';
-   echo '';
 }
-
-
-
-
-echo '<div id="body-container">';
-   require '../views/' . $urls[$url] . '.php';
-echo '</div>';
