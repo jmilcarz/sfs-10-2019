@@ -12,7 +12,8 @@ $urls = [
    "/" => 'home',
    "/feed" => 'home',
    "/profile" => 'user/profile',
-   "/logout" => 'logout'
+   "/logout" => 'logout',
+   '/profile/settings' => 'user/settings'
 ];
 
 // echo $url;
