@@ -24,12 +24,12 @@ $router = [
    '/u' => 'user/profile'
 ];
 
-echo 'url: ' . $url . '<br>';
-print_r($urls[$url]); echo '<br>';
+// echo 'url: ' . $url . '<br>';
+// print_r($urls[$url]); echo '<br>';
 
 if ($url != "/") {
    $params = explode('/', $url);
-   echo 'params: '; print_r($params);
+   // echo 'params: '; print_r($params);
    $params[1] = '/'.$params[1];
 } else {
    $params = [0, '/'];
@@ -45,15 +45,19 @@ if ($params[1] == '/u') { # profile router
       echo '<h1>User Id is required!</h1>';
       exit();
    }
-   $userid = $params[2];
+   $userid = (is_numeric($params[2]) ? $params[2] : 'error');
+   if ($userid == 'error') {
+      echo '<h1>User Id is required!</h1>';
+      exit();
+   }
    $view = ($params[3] ? $params[3] : "home");
 
    echo '<div id="body-container">';
-      echo '<h1>User Profile ('.$userid.')</h1>';
-      echo '<h3>'.$view.'</h3>';
+      echo '<h1>User Profile ('.$userid.')</h1><hr>';
       foreach ($urls[$params[1]][1] as $v) {
          echo '<a href="#" data-link="/u/'.$userid.'/' . substr($v, 1) . '">' . substr($v, 1) . '</a> ';
       }
+      echo '<hr><h2>'.$view.'</h2>';
    echo '</div>';
 
 } else {

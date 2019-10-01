@@ -31,11 +31,28 @@ if(isset($_POST["submit"])) {
 </head>
 <body onload="loadPage()">
    <div id="app-container"></div>
-   <form action="index.php" method="post" enctype="multipart/form-data">
-      <input type="file" name="image">
+   <form action="index.php" method="post" id="upload-image" enctype="multipart/form-data">
+      <input type="file" name="image" id="image">
       <button type="submit" name="submit">send</button>
    </form>
    <script>
+      $("#upload-image").on('submit', function(e) {
+         e.preventDefault();
+         $.ajax({
+            url: "/fb/app/ajax/upload.php",
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: new FormData(this),
+            beforeSend: function() {
+               $("#app-container").html('Loading...');
+            },
+            success: function(data) {
+               $('#app-container').html(data)
+            }
+         });
+      });
+
       function loadPage() {
          let url = window.location.href.substring(24);
          // console.log('url before: ' + url)
