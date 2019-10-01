@@ -15,6 +15,13 @@ $urls = [
    "/logout" => 'logout'
 ];
 
+// echo $url;
+//
+// if (!in_array($url, $urls)) {
+//    echo '404. Page not found.';
+//    exit();
+// }
+
 if (isset($_GET['specials'])) { # configure specials such as load nav or sidebar etc.
    $specials = $_GET['specials'];
    $specials = explode(',', $specials);
