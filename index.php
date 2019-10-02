@@ -44,11 +44,8 @@ if(isset($_POST["submit"])) {
             processData: false,
             contentType: false,
             data: new FormData(this),
-            beforeSend: function() {
-               $("#app-container").html('Loading...');
-            },
             success: function(data) {
-               $('#app-container').html(data)
+               $('#app-container').append(data)
             }
          });
       });

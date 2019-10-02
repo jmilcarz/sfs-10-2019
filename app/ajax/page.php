@@ -12,7 +12,7 @@ $urls = [
    ['/', '/feed', '/u', '/logout'], # <- avaible urls
    '/' => ['/', []],
    '/feed' => ['/feed', []],
-   '/u' => ['/u', ['/home', '/notes', '/friends', '/followers']],
+   '/u' => ['/u', ['/home', '/notes', '/friends', '/followers', '/settings']],
    '/logout' => ['/logout', []]
 ];
 
@@ -57,16 +57,20 @@ if ($params[1] == '/u') { # profile router
       foreach ($urls[$params[1]][1] as $v) {
          echo '<a href="#" data-link="/u/'.$userid.'/' . substr($v, 1) . '">' . substr($v, 1) . '</a> ';
       }
-      echo '<hr><h2>'.$view.'</h2>';
+      if ($view == 'settings') {
+         require '../views/user/settings.php';
+      } else {
+         echo '<hr><h2>'.$view.'</h2>';
+      }
    echo '</div>';
 
-} else {
+} else { // load view
    echo '<div id="body-container">';
       require '../views/' . $router[$url] . '.php';
    echo '</div>';
 }
 
-if (isset($_GET['specials'])) { # configure specials such as load nav or sidebar etc.
+if (isset($_GET['specials'])) { // configure specials such as load nav or sidebar etc.
    $specials = $_GET['specials'];
    $specials = explode(',', $specials);
    // print_r($specials);

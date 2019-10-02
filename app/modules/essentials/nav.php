@@ -5,6 +5,13 @@
  */
 ?>
 <style>
+   body {
+      background: rgb(24, 27, 45);
+      color: rgb(214, 214, 214)
+   }
+   a {
+      color: rgb(127, 128, 240)
+   }
    nav {
       height: 30px;
       background: rgb(92, 219, 189);
