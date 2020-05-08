@@ -1,0 +1,26 @@
+#body-container {
+    margin-top: 75px;
+}
+
+#nl-home-jumbotron {
+    margin-top: 75px;
+}
+
+.profile-img {
+    display: block;
+    width: 100%;
+    border-radius: 50%;
+    border: 0.5px solid #ecebec;
+}
+
+.sfs-post {
+    margin-top: 15px;
+}
+
+.sfs-post > .card-body {
+    padding: 15px
+}
+.sfs-post .authorName {
+    font-weight: bold;
+    color: #404040;
+}
