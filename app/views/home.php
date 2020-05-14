@@ -1,4 +1,5 @@
 <div id="home-container"></div>
+<div id="notifications-floating-box"></div>
 <script>
    $(function() {
       let url = window.location.href.substring(24);

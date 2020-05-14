@@ -71,7 +71,7 @@
 
    });
 
-   function writePost(content, userid, privacy) {
+   function writePost(content, userid, privacy, bg = false) {
       var xhr = $.ajax({
          url: "/fb/app/ajax/feed.php?a=sendForm",
          type: 'POST',
@@ -79,17 +79,18 @@
          success: function(data) {
             data = JSON.parse(data)
             if (data.type == "error") {
-               $("#post-form-message").removeClass("d-none alert-success").addClass("alert-danger").html(data.m);
+               fadeIn('<div class="alert alert-danger" role="alert">'+data.m+'</div>');
                setTimeout(function() { 
-                  $("#post-form-message").addClass("d-none");
-               }, 5000);
+                  fadeOut("#notifications-floating-box > div");
+               }, 3000);
             } else if (data.type == "success") {
-               $("#post-form-message").removeClass("d-none alert-danger").addClass("alert-success").html(data.m);
+               fadeIn('<div class="alert alert-success" role="alert">'+data.m+'</div>');
                $("#post-form").trigger("reset");
-               $("#feed-posts-container").append('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+userid+'" data-link="/u/'+userid+'"><img src="'+data.userimg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+userid+'" data-link="/u/'+userid+'" class="authorName">'+data.userName+'</a></div><div class="content">'+content+'</div></div></div></div></div>');
+               $("#feed-posts-container").prepend('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+userid+'" data-link="/u/'+userid+'"><img src="'+data.userimg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+userid+'" data-link="/u/'+userid+'" class="authorName">'+data.userName+'</a></div><div class="content">'+data.content+'</div></div></div></div></div>');
+               refreshLinks(url);
                setTimeout(function() { 
-                  $("#post-form-message").addClass("d-none");
-               }, 5000);
+                  fadeOut("#notifications-floating-box > div");
+               }, 3000);
             }
          }
       });
@@ -150,7 +151,7 @@
                      working = false;
                      $("#feed-posts-container-loader").html("<div style='height: 100%; padding: 70px 0; display: flex; justify-content: center; flex-direction: column; align-items: center;'><span style='font-size: 30px; color: var(--hncolor);margin-bottom:5px;'>Congrats!</span><span style='text-align: center'>You've made it. There are no posts left.<br>Wow you've impressed me!<br>It's huge so let me know by clicking <button class='feed-ending-congrats-btn'>here</button>!</span></div>");
                      $(".feed-ending-congrats-btn").click(function() {
-
+                        writePost("I made it @kubamilcarz! #sfsnetworkfeed", <?php echo Auth::loggedin(); ?>, 2, true);
                      });
                      return;
                   }else {

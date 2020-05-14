@@ -85,6 +85,15 @@ class Auth
       setcookie("" . self::$cookie . "_", '1', time()-3600);
    }
 
+   public function checkProfilePhoto($img) {
+      if (empty($img)) {
+         $img = 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg';
+      } else {
+         $img =  App::$IMG_STORAGE . $img['avatar'];
+      }
+      return $img;
+   }
+
 
    function getIPAddress() {
       if (!empty($_SERVER['HTTP_CLIENT_IP']) && validate_ip($_SERVER['HTTP_CLIENT_IP'])) {
@@ -138,5 +147,7 @@ class Auth
       }
       return true;
    }
+
+
 
 }

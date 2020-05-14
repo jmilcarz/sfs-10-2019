@@ -44,11 +44,7 @@ if (Auth::loggedin()) {
             $response = array();
             foreach ($posts as $post) {
                // profile img
-               if ($post['avatar'] == '') {
-                  $img = 'https://www.ischool.berkeley.edu/sites/default/files/default_images/avatar.jpeg';
-               } else {
-                  $img =  App::$IMG_STORAGE . $post['avatar'];
-               }
+               $post['avatar'] = Auth::checkProfilePhoto($post['avatar']);
 
                // author info
                $author = DB::query('SELECT fullName, userName FROM users WHERE users_id = :id', [':id'=>$post['users_id']])[0];
@@ -71,7 +67,7 @@ if (Auth::loggedin()) {
                   'PostId'=> $post['id'],'PostBody'=>Posts::link_add($post['content']),
                   'AuthorName'=> $author['fullName'], 'PostDate'=>$post['createdAt'],
                   'PostLikes'=> $likes, 'CommentsNumber'=>$Ncomment,
-                  'AuthorImg'=> $img, 'AuthorId'=>$post['users_id'],
+                  'AuthorImg'=> $post['avatar'], 'AuthorId'=>$post['users_id'],
                   'ProfileURL' => App::PrintProfileURL($author['username'], 'home')
                ];
                array_push($response, $row);

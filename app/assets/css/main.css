@@ -13,6 +13,7 @@
     border: 0.5px solid #ecebec;
 }
 
+
 .sfs-post {
     margin-top: 15px;
 }
@@ -23,4 +24,13 @@
 .sfs-post .authorName {
     font-weight: bold;
     color: #404040;
+}
+
+#notifications-floating-box {
+    position: fixed;
+    z-index: 1000;
+    left: 10px;
+    bottom: 10px;
+    min-width: 300px;
+    max-width: 600px;
 }

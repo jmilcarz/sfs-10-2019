@@ -131,3 +131,14 @@ function scrollToAnchor(aid){
 		console.log(e)
 	}
 }
+
+function fadeIn(el, append = "#notifications-floating-box", time = 200) {
+   $(el).hide().appendTo(append).fadeIn(time);
+}
+
+function fadeOut(el, time = 200) {
+   $(el).last().fadeOut(time);
+   setTimeout(function() {
+      $(el).last().remove();
+   }, time);
+}
