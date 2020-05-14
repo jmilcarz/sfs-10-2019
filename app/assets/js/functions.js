@@ -87,6 +87,7 @@ function loadPage() {
             window.history.back();
          } else {
             $("#app-container").html(data);
+            $("#feed-posts-container").html("");
             // refreshLinks(url);
          }
       }

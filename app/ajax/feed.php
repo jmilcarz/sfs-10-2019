@@ -38,7 +38,7 @@ if (Auth::loggedin()) {
                }
             } else {
                // $posts = DB::query('SELECT posts.id, posts.userId, posts.content, posts.likes, posts.comments, posts.createdAt, posts.privacy, users.profileId, users.users_id AS users_id FROM posts, users, followers WHERE users.users_id = posts.posts_userId AND posts.privacy = 1 AND followers.followers_userid = :userid AND posts.posts_authorid = followers.follower_id ORDER BY posts.createdAt DESC LIMIT 5 OFFSET '.$start, [':userid' => $user['id']]);
-               $posts = DB::query('SELECT posts.id, posts.userId, posts.content, posts.likes, posts.comments, posts.createdAt, posts.privacy, users.profileImg, users.users_id AS users_id FROM posts, users WHERE users.users_id = posts.userId AND posts.privacy = 1 ORDER BY posts.createdAt DESC LIMIT 5 OFFSET '.$start, [':userid' => $user['id']]);
+               $posts = DB::query('SELECT posts.id, posts.userId, posts.content, posts.likes, posts.comments, posts.createdAt, posts.privacy, users.profileImg, users.users_id AS users_id FROM posts, users WHERE users_id = userId AND privacy = 1 OR (userId = users_id AND privacy LIKE "%") ORDER BY posts.createdAt DESC LIMIT 5 OFFSET '.$start, [':userid' => $user['id']]);
             }
 
             $response = array();

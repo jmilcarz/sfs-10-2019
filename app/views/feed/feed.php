@@ -19,6 +19,7 @@
          </div>
          <div style="margin-top: 25px">
             <div id="feed-posts-container"></div>
+            <div id="feed-posts-container-loader"></div>
          </div>
       </div>
       <div class="col-md-3">
@@ -31,22 +32,14 @@
    var loadedPostsCounter = 0;
    $(function() {
       url = window.location.href.substring(24);
-      $("#feed-posts-container").empty();
+
       if (url == "/") {
          setTimeout(function() {
-            let r = loadPosts();
+            loadPosts();
             if ($(".sfs-post").length > 5) {
-               $("#feed-posts-container").empty();
-               // loadPosts();
-            }
-            if (r > 0) {
-               if (r > 5) {
-                  $("#feed-posts-container").empty();
-                  // loadPosts();
-               }
-               clearTimeout();
             }
          }, 500);
+         clearTimeout();
       }
 
       // load form
@@ -71,37 +64,43 @@
       // send post form
       $("#post-form").submit(function(e) {
          e.preventDefault();
-         let content = $("#post-content").val();
-         let userid = <?php echo Auth::loggedin(); ?>;
-         let privacy = $("#post-privacy").val();
-         $.ajax({
-            url: "/fb/app/ajax/feed.php?a=sendForm",
-            type: 'POST',
-            data: { content: content, userid: userid, privacy: privacy },
-            success: function(data) {
-               data = JSON.parse(data)
-               if (data.type == "error") {
-                  $("#post-form-message").removeClass("d-none alert-success").addClass("alert-danger").html(data.m);
-                  setTimeout(function() { 
-                     $("#post-form-message").addClass("d-none");
-                  }, 5000);
-               } else if (data.type == "success") {
-                  $("#post-form-message").removeClass("d-none alert-danger").addClass("alert-success").html(data.m);
-                  $("#post-content").val('');
-                  setTimeout(function() { 
-                     $("#post-form-message").addClass("d-none");
-                  }, 5000);
-               }
-            }
-         });
+         writePost($("#post-content").val(), <?php echo Auth::loggedin(); ?>, $("#post-privacy").val());
+         
+         
       });
 
    });
 
+   function writePost(content, userid, privacy) {
+      var xhr = $.ajax({
+         url: "/fb/app/ajax/feed.php?a=sendForm",
+         type: 'POST',
+         data: { content: content, userid: userid, privacy: privacy },
+         success: function(data) {
+            data = JSON.parse(data)
+            if (data.type == "error") {
+               $("#post-form-message").removeClass("d-none alert-success").addClass("alert-danger").html(data.m);
+               setTimeout(function() { 
+                  $("#post-form-message").addClass("d-none");
+               }, 5000);
+            } else if (data.type == "success") {
+               $("#post-form-message").removeClass("d-none alert-danger").addClass("alert-success").html(data.m);
+               $("#post-form").trigger("reset");
+               $("#feed-posts-container").append('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+userid+'" data-link="/u/'+userid+'"><img src="'+data.userimg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+userid+'" data-link="/u/'+userid+'" class="authorName">'+data.userName+'</a></div><div class="content">'+content+'</div></div></div></div></div>');
+               setTimeout(function() { 
+                  $("#post-form-message").addClass("d-none");
+               }, 5000);
+            }
+         }
+      });
+      setTimeout(function() {
+         xhr.abort();
+      }, 100);
+   }
+
    function loadPosts() {
       let url = window.location.href.substring(24);
       if (url == "/") {
-         $("#feed-posts-container").empty();
          $.ajax({
             type: "GET",
             url: "/fb/app/ajax/feed.php?a=fetchFeed&start=0",
@@ -119,58 +118,78 @@
                let commentsloaded = false;
                let posts = JSON.parse(data);
                if (posts.length <= 5) {
-                  $("#feed-posts-container")
+                  $("#feed-posts-container").html(" ");
                   $.each(posts, function(index) {
                      $("#feed-posts-container").append('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'"><img src="'+posts[index].AuthorImg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'" class="authorName">'+posts[index].AuthorName+'</a></div><div class="content">'+posts[index].PostBody+'</div></div></div></div></div>');
                   });
                }  
                refreshLinks(url);
-               scrollToAnchor(location.href);
+               scrollToAnchor(location.hash);
             },
             error: function(r) {
                console.log("Something went wrong!");
             },
          });
       }
-      return counter;
+      return start;
    }
 
-   // $(window).scroll(function() {
-   // if ($(this).scrollTop() + 1 >= $('body').height() - $(window).height()) {
-   //    if (working == false) {
-   //       working = true;
-   //       $.ajax({
-   //          type: "GET",
-   //          url: "/fb/app/ajax/feed.php?a=fetchFeed&start="+start,
-   //          processData: false,
-   //          cache: false,
-   //          contentType: "application/json",
-   //          data: '',
-   //          beforeSend: function() {
-   //             if (lastcount == counter) {
-   //                working = false;
-   //                $("#hn-posts-loader").html("<div style='height: 100%; display: flex; justify-content: center; flex-direction: column; align-items: center;'><span style='font-size: 30px; color: var(--hncolor);margin-bottom:5px;'>Congrats!</span><span>You've made it. There are no posts left.</span></div>");
-   //                return;
-   //             }else {
-   //                $("#hn-posts-loader").html('<div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>');
-   //             }
-   //          },
-   //          success: function(data) {
-   //             scrollToAnchor(location.hash)
-   //             setTimeout(function() {
-   //                working = false;
-   //                $("#hn-posts-loader").html('');
-   //             }, 1500)
-   //             start+=5;
-   //          },
-   //          error: function(r) {
-   //             console.log("Something went wrong!");
-   //          }
-   //       })
-   //    }
-   // }
-   
-   // });
+   $(window).scroll(function() {
+      if ($(this).scrollTop() + 1 >= $('body').height() - $(window).height()) {
+         if (working == false) {
+            working = true;
+            var xhr = $.ajax({
+               type: "GET",
+               url: "/fb/app/ajax/feed.php?a=fetchFeed&start="+start,
+               processData: false,
+               cache: false,
+               contentType: "application/json",
+               data: '',
+               beforeSend: function() {
+                  if (lastcount == counter) {
+                     working = false;
+                     $("#feed-posts-container-loader").html("<div style='height: 100%; padding: 70px 0; display: flex; justify-content: center; flex-direction: column; align-items: center;'><span style='font-size: 30px; color: var(--hncolor);margin-bottom:5px;'>Congrats!</span><span style='text-align: center'>You've made it. There are no posts left.<br>Wow you've impressed me!<br>It's huge so let me know by clicking <button class='feed-ending-congrats-btn'>here</button>!</span></div>");
+                     $(".feed-ending-congrats-btn").click(function() {
+
+                     });
+                     return;
+                  }else {
+                     $("#feed-posts-container-loader").html('<div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>');
+                  }
+               },
+               success: function(data) {
+                  if (lastcount == counter) { // congrats sign stays
+                     return;
+                  }
+
+                  lastcount = $("#feed-posts-container > div").length;
+
+                  let commentsloaded = false;
+                  let posts = JSON.parse(data);
+
+                  $.each(posts, function(index) {
+
+                     $("#feed-posts-container").append('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'"><img src="'+posts[index].AuthorImg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'" class="authorName">'+posts[index].AuthorName+'</a></div><div class="content">'+posts[index].PostBody+'</div></div></div></div></div>');
+                     
+                  });
+                  refreshLinks(url);
+
+                  counter = $("#feed-posts-container > div").length;
+                  console.log(counter);
+                  scrollToAnchor(location.hash)
+                  setTimeout(function() {
+                     working = false;
+                     $("#feed-posts-container-loader").html('');
+                  }, 1500)
+                  start+=5;
+               },
+               error: function(r) {
+                  console.log("Something went wrong!");
+               }
+            })
+         }
+      }
+   });
 
    
 
