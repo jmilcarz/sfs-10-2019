@@ -12,3 +12,10 @@
         </div>
     </div>
 </div>
+<script>
+    $(function() {
+        refreshLinks();
+        setTitle('/Messages');
+    })
+    
+</script>

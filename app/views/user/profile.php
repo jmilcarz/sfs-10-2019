@@ -8,6 +8,7 @@ foreach ($urls[$params[1]][1] as $v) { // print nav
 <div id="profile-container"></div>
 <script>
    $(function() {
+
       let url = window.location.href.substring(24);
       $.ajax({
          url: "/fb/app/ajax/profile.php?view=<?php echo $view; ?>",

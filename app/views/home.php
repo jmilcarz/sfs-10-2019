@@ -14,5 +14,5 @@
             setTitle('/SFS');
          }
       })
-   })
+   });
 </script>

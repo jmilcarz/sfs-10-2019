@@ -20,7 +20,7 @@
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="/u/<?php echo $userid; ?>" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <img height="30" width="30" src="">
+          <img style="max-width: 30px; display: inline-block" class="profile-img" id="sfs-nav-user-img">
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" data-link="/u/<?php echo $userid; ?>" href="/u/<?php echo $userid; ?>">Profile</a>
@@ -40,3 +40,4 @@
     </form>
   </div>
 </nav>
+<script>$(function() {$("#sfs-nav-user-img").attr("src", "<?php echo Auth::checkProfilePhoto(DB::query('SELECT profileImg FROM users WHERE users_id = :userid', [':userid' => Auth::loggedin()])[0]['profileImg']); ?>");});</script>
