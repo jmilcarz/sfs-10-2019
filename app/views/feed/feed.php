@@ -22,7 +22,7 @@
             <div id="feed-posts-container-loader"></div>
          </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 d-sm-none d-block">
          <div class="card"><div class="card-body"></div></div>
       </div>
    </div>
@@ -86,7 +86,8 @@
             } else if (data.type == "success") {
                fadeIn('<div class="alert alert-success" role="alert">'+data.m+'</div>');
                $("#post-form").trigger("reset");
-               $("#feed-posts-container").prepend('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+userid+'" data-link="/u/'+userid+'"><img src="'+data.userimg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+userid+'" data-link="/u/'+userid+'" class="authorName">'+data.userName+'</a></div><div class="content">'+data.content+'</div></div></div></div></div>');
+               $("#feed-posts-container").prepend('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+userid+'" data-link="/u/'+userid+'"><img src="'+data.userimg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+userid+'" data-link="/u/'+userid+'" class="authorName">'+data.userName+'</a><span class="float-right font-italic">now</span></div><div class="content">'+data.content+'</div><hr><div class="actions btn-toolbar"><div class="btn-group"><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-thumbs-up" /> 0</button><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-share" /> 0</button><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-comments" /> 0</button></div></div></div></div></div></div>');
+               // $("#feed-posts-container").prepend('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+userid+'" data-link="/u/'+userid+'"><img src="'+data.userimg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+userid+'" data-link="/u/'+userid+'" class="authorName">'+data.userName+'</a></div><div class="content">'+data.content+'</div></div></div></div></div>');
                refreshLinks(url);
                setTimeout(function() { 
                   fadeOut("#notifications-floating-box > div");
@@ -112,7 +113,7 @@
                loadedPostsCounter++;
                start = 5;
                working = false;
-               counter = 5;
+               counter = 0;
                lastcount = 0;
 
                console.log(data);
@@ -121,7 +122,9 @@
                if (posts.length <= 5) {
                   $("#feed-posts-container").html(" ");
                   $.each(posts, function(index) {
-                     $("#feed-posts-container").append('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'"><img src="'+posts[index].AuthorImg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'" class="authorName">'+posts[index].AuthorName+'</a></div><div class="content">'+posts[index].PostBody+'</div></div></div></div></div>');
+                     counter++;
+                     $("#feed-posts-container").append('<div class="card sfs-post" data-counter="'+counter+'"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'"><img src="'+posts[index].AuthorImg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'" class="authorName">'+posts[index].AuthorName+'</a><span class="float-right font-italic">'+posts[index].PostDate+'</span></div><div class="content">'+posts[index].PostBody+'</div><hr><div class="actions btn-toolbar"><div class="btn-group"><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-thumbs-up" /> '+posts[index].likes+'</button><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-share" /> '+posts[index].shares+'</button><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-comments" /> '+posts[index].comments+'</button></div></div></div></div></div></div>');
+                     $("[data-counter="+counter+"]").hide().fadeIn(500);
                   });
                }  
                refreshLinks(url);
@@ -155,7 +158,7 @@
                      });
                      return;
                   }else {
-                     $("#feed-posts-container-loader").html('<div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>');
+                     $("#feed-posts-container-loader").html('<div class="d-flex justify-content-center" style="padding: 70px 0;"><div class="spinner-grow" role="status"><span class="sr-only">Loading...</span></div></div>');
                   }
                },
                success: function(data) {
@@ -169,9 +172,9 @@
                   let posts = JSON.parse(data);
 
                   $.each(posts, function(index) {
-
-                     $("#feed-posts-container").append('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'"><img src="'+posts[index].AuthorImg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'" class="authorName">'+posts[index].AuthorName+'</a></div><div class="content">'+posts[index].PostBody+'</div></div></div></div></div>');
-                     
+                     counter++;
+                     $("#feed-posts-container").append('<div class="card sfs-post" data-counter="'+counter+'"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'"><img src="'+posts[index].AuthorImg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'" class="authorName">'+posts[index].AuthorName+'</a><span class="float-right font-italic">'+posts[index].PostDate+'</span></div><div class="content">'+posts[index].PostBody+'</div><hr><div class="actions btn-toolbar"><div class="btn-group"><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-thumbs-up" /> '+posts[index].likes+'</button><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-share" /> '+posts[index].shares+'</button><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-comments" /> '+posts[index].comments+'</button></div></div></div></div></div></div>');
+                     $("[data-counter="+counter+"]").hide().fadeIn(500);
                   });
                   refreshLinks(url);
 
