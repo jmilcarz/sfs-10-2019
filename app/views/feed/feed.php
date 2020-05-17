@@ -4,10 +4,12 @@
    var counter = 5; // to check if all posts have loaded
    var lastcount = 0;</script>
 
-<div id="body-container" class="container-fluid">
+<div id="feed-container" class="container-fluid">
    <div class="row">
-      <div class="col-md-3">
-         <div class="card"><div class="card-body"></div></div>
+      <div class="col-md-3 d-none d-lg-block">
+         <div class="card">
+            <div class="card-body loading-el-animation" id="feed-left-sidebar"></div>
+         </div>
       </div>
       <div class="col-md-6">
          <div class="card">
@@ -65,10 +67,26 @@
       $("#post-form").submit(function(e) {
          e.preventDefault();
          writePost($("#post-content").val(), <?php echo Auth::loggedin(); ?>, $("#post-privacy").val());
-         
-         
       });
 
+      // load left sidebar
+      $("#feed-left-sidebar").html("<div style='height: 130px; border-bottom: 5px solid #fff;'><div style='height: 100px; width: 100px; background: #fefefe; border-radius: 50%; position: absolute; left: 50%; top: 50px; transform: translateX(-50%)'></div></div><div style='height: auto; box-sizing: border-box; padding: 50px 15px 30px 15px; display: flex; flex-direction: column; align-items: center'><div style='width: 200px; height: 30px; background: #fff; margin-bottom: 5px;'></div><div style='width: 130px; height: 20px; background: #fff; margin-bottom: 25px;'></div><div style='width: 100%; display: flex; margin-bottom: 25px;'><div style='width: 100%; height: 40px; background: #fff; margin-right: 5px;'></div><div style='width: 100%; height: 40px; background: #fff;'></div></div><div style='width: 100%; height: 30px; background: #fff; margin-bottom: 5px;'></div><div style='width: 100%; height: 30px; background: #fff; margin-bottom: 5px;'></div><div style='width: 100%; height: 30px; background: #fff; margin-bottom: 5px;'></div><div style='width: 100%; height: 30px; background: #fff; margin-bottom: 5px;'></div><div style='width: 100%; height: 30px; background: #fff; margin-bottom: 5px;'></div></div>");
+      $.ajax({
+         type: "GET",
+         url: "/fb/app/views/feed/elements/left-sidebar.php",
+         processData: false,
+         contentType: "application/json",
+         cache: false,
+         data: '',
+         success: function(data) {
+            setTimeout(function() {
+               $("#feed-left-sidebar").html(data);
+               $("#feed-left-sidebar").removeClass("loading-el-animation");
+               refreshLinks(url);
+            }, 400)
+         }
+         
+      });
    });
 
    function writePost(content, userid, privacy, bg = false) {
@@ -87,7 +105,6 @@
                fadeIn('<div class="alert alert-success" role="alert">'+data.m+'</div>');
                $("#post-form").trigger("reset");
                $("#feed-posts-container").prepend('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+userid+'" data-link="/u/'+userid+'"><img src="'+data.userimg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+userid+'" data-link="/u/'+userid+'" class="authorName">'+data.userName+'</a><span class="float-right font-italic">now</span></div><div class="content">'+data.content+'</div><hr><div class="actions btn-toolbar"><div class="btn-group"><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-thumbs-up" /> 0</button><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-share" /> 0</button><button type="button" class="btn btn-sm rounded-pill"><i class="fa fa-comments" /> 0</button></div></div></div></div></div></div>');
-               // $("#feed-posts-container").prepend('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+userid+'" data-link="/u/'+userid+'"><img src="'+data.userimg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+userid+'" data-link="/u/'+userid+'" class="authorName">'+data.userName+'</a></div><div class="content">'+data.content+'</div></div></div></div></div>');
                refreshLinks(url);
                setTimeout(function() { 
                   fadeOut("#notifications-floating-box > div");

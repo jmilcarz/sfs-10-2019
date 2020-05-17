@@ -95,7 +95,7 @@ class Auth
    }
 
 
-   function getIPAddress() {
+   public static function getIPAddress() {
       if (!empty($_SERVER['HTTP_CLIENT_IP']) && validate_ip($_SERVER['HTTP_CLIENT_IP'])) {
          return $_SERVER['HTTP_CLIENT_IP'];
       }
@@ -127,7 +127,7 @@ class Auth
       return $_SERVER['REMOTE_ADDR'];
    }
 
-   function validate_ip($ip) {
+   public static function validate_ip($ip) {
       if (strtolower($ip) === 'unknown') {
          return false;
       }

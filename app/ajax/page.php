@@ -11,16 +11,19 @@ require '../autoload.php';
 // correct urls
 $urls = [
    [ # avaible urls
-      '/', '/feed', '/home',
+      '/', '/feed', '/home', '/explore',
       '/login', '/register', '/forgotpassword', '/logout',
       '/u',
-      '/messages'
+      '/messages', 
+      '/notifications', 
+      '/bookmarks'
    ],
 
    // home
       '/' => ['/', []],
       '/feed' => ['/feed', []],
       '/home' => ['/home', []],
+      '/explore' => ['/explore', []],
    // auth
       '/login' => ['/login', []],
       '/register' => ['/register', []],
@@ -30,8 +33,13 @@ $urls = [
       '/u' => ['/u', App::$profilePages],
 
    // messages
-      '/messages' => ['/messages', []]
+      '/messages' => ['/messages', []],
 
+   // notifications
+      '/notifications' => ['/notifications', []],
+
+   // bookmarks
+      '/bookmarks' => ['/bookmarks', []]
 ];
 
 // which url
@@ -40,6 +48,7 @@ $router = [
    "/" => 'home',
    "/feed" => 'home',
    "/home" => 'home',
+   "/explore" => 'feed/explore',
 
 // auth
    "/login" => 'auth/login',
@@ -51,7 +60,13 @@ $router = [
    '/u' => 'user/profile',
 
 // messages
-   '/messages' => 'messages/index'
+   '/messages' => 'messages/index',
+
+// notifications
+   '/notifications' => 'notifications/index',
+
+// bookmarks
+   '/bookmarks' => 'feed/bookmarks'
 ];
 
 // for not logged
@@ -64,12 +79,6 @@ if ($url != "/") {
 } else {
    $params = [0, '/'];
 }
-
-
-   echo '<div style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); background: rgb(233, 159, 61); width: 360px;"><p>url: '.$url.'</p><p>';
-   print_r($urls[$params[1]]);
-   echo '</p></div>';
-
 
 if (!in_array($params[1], $urls[0])) {
    require '../views/errors/e404.php';
@@ -90,16 +99,24 @@ if ($params[1] == '/u') { # profile router
    }
 
    if (!DB::query('SELECT users_id FROM users WHERE users_id = :userid', [':userid' => $userid])[0]['users_id']) {
-      echo '<div id="body-container">';
+      if (isset($_GET['specials'])) { 
+         echo '<div id="body-container">';
+            echo '<h1>User Doesn\'t exist</h1>';
+         echo '</div>';
+      } else {
          echo '<h1>User Doesn\'t exist</h1>';
-      echo '</div>';
+      }
    } else {
       // user data
       $puser = DB::query('SELECT users_id, fullName as name, userName as username, email, gender, location, profileImg as avatar FROM users WHERE users_id = :userid', [':userid' => $userid])[0];
       // printing view
-      echo '<div id="body-container">';
+      if (isset($_GET['specials'])) { 
+         echo '<div id="body-container">';
+            require '../views/user/profile.php';
+         echo '</div>';
+      } else {
          require '../views/user/profile.php';
-      echo '</div>';
+      }
    }
 
 
@@ -129,10 +146,9 @@ if ($params[1] == '/u') { # profile router
 
 }
 
-if (isset($_GET['specials'])) { // configure specials such as load nav or sidebar etc.
+if (isset($_GET['specials'])) {
    $specials = $_GET['specials'];
    $specials = explode(',', $specials);
-   // print_r($specials);
    if (in_array("loadNav", $specials)) {
       if (Auth::loggedin()) {
          $userid = Auth::loggedin();
@@ -140,9 +156,6 @@ if (isset($_GET['specials'])) { // configure specials such as load nav or sideba
       } else {
          require '../modules/essentials/nav-nl.php';
       }
-
-   }
-   if (in_array("loadsidebar", $specials)) {
-      echo 'sidebar here!';
    }
 }
+

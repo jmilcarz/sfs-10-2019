@@ -1,4 +1,4 @@
-<div id="body-container" class="container">
+<div id="messages-container" class="container">
     <div class="row">
         <div class="col-md-3">
             <div class="card">
@@ -14,8 +14,6 @@
 </div>
 <script>
     $(function() {
-        refreshLinks();
-        setTitle('/Messages');
-    })
-    
+        refreshLinks(window.location.href.substring(24));
+    });
 </script>

@@ -1,3 +1,7 @@
+body {
+    color: #333;
+}
+
 #body-container {
     margin-top: 75px;
 }
@@ -52,4 +56,158 @@
     bottom: 10px;
     min-width: 300px;
     max-width: 600px;
+}
+
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -468px 0
+    }
+    100%{
+        background-position: 468px 0
+    }
+}
+
+.loading-el-animation {
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    background-size: 800px 104px;
+    position: relative;
+}
+
+#feed-left-sidebar {
+    padding: 0;
+    margin: 0;
+    height: auto;
+}
+
+#feed-left-sidebar > .top-bar {
+    height: 130px;
+    background: #4da0ff;
+    margin: 0;
+}
+
+#feed-left-sidebar > .top-bar > a {
+    display: block;
+    margin: 0;
+    height: 100px; 
+    width: 100px; 
+    position: absolute; 
+    left: 50%; 
+    top: 60px; 
+    transform: translateX(-50%);
+}
+
+#feed-left-sidebar > .top-bar > a > img {
+    height: 100%; 
+    width: 100%; 
+    box-sizing: border-box;
+    border: 1px solid #ecebec;
+}
+
+#feed-left-sidebar > .box {
+    box-sizing: border-box; 
+    padding: 40px 15px 30px 15px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center 
+}
+
+#feed-left-sidebar > .box > div {
+    width: 100%;
+    text-align: center;
+}
+
+#feed-left-sidebar > .box .name {
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+    color: #333;
+}
+
+#feed-left-sidebar > .box .username {
+    font-size: 14px;
+    font-weight: light;
+    display: block;
+    margin-top: -3px;
+    margin-bottom: 25px;
+}
+
+#feed-left-sidebar > .box > .stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 0;
+    width: 100%;
+    padding: 0;
+}
+
+#feed-left-sidebar > .box > .stats div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+#feed-left-sidebar > .box > .stats div span:first-child {
+    font-size: 15px;
+}
+
+#feed-left-sidebar > .box > .stats div span:last-child {
+    font-weight: bold;
+    font-size: 19px;
+}
+
+#feed-left-sidebar .sidebar-links {
+    width: 100%;
+    margin: 0;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+#feed-left-sidebar .sidebar-links > .list-group-item {
+    padding: 10px 15px;
+    box-sizing: border-box;
+    background: none;
+    border: none;
+    font-size: 17px;
+    transition: 70ms all ease-in-out;
+}
+
+#feed-left-sidebar .sidebar-links > .list-group-item:hover {
+    background: #efefef;
+    cursor: pointer;
+}
+
+#feed-left-sidebar .sidebar-links > .list-group-item a {
+    color: #333;
+    text-decoration: none;
+}
+
+#feed-left-sidebar .sidebar-links > .list-group-item i {
+    width: 40px;
+}
+
+#bookmarks-container #bookmark-loader {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#bookmarks-container .page-header {
+    border-bottom: 1px solid #ecebec;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#bookmarks-container .page-header > .search-form {
+    width: 250px;
+    height: 31px;
 }

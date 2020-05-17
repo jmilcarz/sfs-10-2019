@@ -15,6 +15,7 @@ function reloadHomePage(url) {
    });
 }
 
+
 function refreshLinks(url) {
    $('[data-link]').click(function(e) {
       e.preventDefault();
@@ -93,36 +94,6 @@ function loadPage() {
       }
    });
 }
-
-// function loadPosts() {
-//    let url = window.location.href.substring(24);
-//    $.ajax({
-//       type: "GET",
-//       url: "/fb/app/ajax/feed.php?a=fetchFeed&start=0",
-//       processData: false,
-//       contentType: "application/json",
-//       data: '',
-//       success: function(data) {
-//          loadedPostsCounter++;
-//          start = 5;
-//          working = false;
-//          counter = 5;
-//          lastcount = 0;
-
-//          console.log(data)
-//          let commentsloaded = false
-//          let posts = JSON.parse(data)
-//          $.each(posts, function(index) {
-//             $("#feed-posts-container").append('<div class="card sfs-post"><div class="card-body"><div class="row no-gutters"><div class="col-1"><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'"><img src="'+posts[index].AuthorImg+'" class="profile-img" /></a></div><div class="col-11" style="padding-left: 10px; width: calc(100%-10px)"><div><a href="/u/'+posts[index].AuthorId+'" data-link="/u/'+posts[index].AuthorId+'" class="authorName">'+posts[index].AuthorName+'</a></div><div class="content">'+posts[index].PostBody+'</div></div></div></div></div>');
-//          })
-//          refreshLinks(url)
-//          scrollToAnchor(location.href)
-//       },
-//       error: function(r) {
-//          console.log("Something went wrong!");
-//       },
-//    });
-// }
 
 function scrollToAnchor(aid){
 	try {
